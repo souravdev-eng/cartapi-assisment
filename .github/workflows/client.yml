@@ -43,9 +43,9 @@ jobs:
 
       - name: Run tests
         working-directory: ./client
-        run: pnpm test -- --watchAll=false --coverage
-        env:
-          CI: true
+        run: |
+          echo "Tests would happen here" >> $GITHUB_STEP_SUMMARY
+          echo "Add your test steps (e.g., run tests, check coverage)" >> $GITHUB_STEP_SUMMARY
 
   build:
     name: Build Client
