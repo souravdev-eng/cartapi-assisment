@@ -21,24 +21,29 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '18'
-          cache: 'npm'
-          cache-dependency-path: client/package-lock.json
+          cache: 'pnpm'
+          cache-dependency-path: client/pnpm-lock.yaml
 
       - name: Install dependencies
         working-directory: ./client
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: Run linter
         working-directory: ./client
-        run: npm run build || true
+        run: pnpm run build || true
 
       - name: Run tests
         working-directory: ./client
-        run: npm test -- --watchAll=false --coverage
+        run: pnpm test -- --watchAll=false --coverage
         env:
           CI: true
 
@@ -51,20 +56,25 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '18'
-          cache: 'npm'
-          cache-dependency-path: client/package-lock.json
+          cache: 'pnpm'
+          cache-dependency-path: client/pnpm-lock.yaml
 
       - name: Install dependencies
         working-directory: ./client
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: Build application
         working-directory: ./client
-        run: npm run build
+        run: pnpm run build
         env:
           REACT_APP_API_URL: http://localhost:3001
 
