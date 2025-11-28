@@ -1,0 +1,143 @@
+.admin-dashboard {
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.admin-dashboard h2 {
+  margin-bottom: 1.5rem;
+  color: #2c3e50;
+}
+
+.admin-message {
+  padding: 1rem;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+  font-weight: 500;
+}
+
+.admin-message-success {
+  background-color: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+
+.admin-message-error {
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+}
+
+.admin-actions {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.generate-discount-btn,
+.refresh-stats-btn {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.generate-discount-btn {
+  background-color: #3498db;
+  color: white;
+}
+
+.generate-discount-btn:hover:not(:disabled) {
+  background-color: #2980b9;
+}
+
+.refresh-stats-btn {
+  background-color: #95a5a6;
+  color: white;
+}
+
+.refresh-stats-btn:hover:not(:disabled) {
+  background-color: #7f8c8d;
+}
+
+.generate-discount-btn:disabled,
+.refresh-stats-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.admin-loading {
+  text-align: center;
+  padding: 3rem;
+  color: #666;
+}
+
+.admin-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+
+.stat-card {
+  background: white;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.stat-card-full {
+  grid-column: 1 / -1;
+}
+
+.stat-card h3 {
+  color: #2c3e50;
+  margin-bottom: 1rem;
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.stat-value {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #27ae60;
+  margin: 0;
+}
+
+.discount-codes-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.discount-code-badge {
+  background-color: #3498db;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.no-codes {
+  color: #666;
+  font-style: italic;
+}
+
+@media (max-width: 768px) {
+  .admin-actions {
+    flex-direction: column;
+  }
+
+  .admin-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .stat-card-full {
+    grid-column: 1;
+  }
+}
+
