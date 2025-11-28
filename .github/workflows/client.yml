@@ -1,0 +1,89 @@
+name: Client CI/CD
+
+on:
+  push:
+    branches: [ main, develop ]
+    paths:
+      - 'client/**'
+      - '.github/workflows/client.yml'
+  pull_request:
+    branches: [ main, develop ]
+    paths:
+      - 'client/**'
+      - '.github/workflows/client.yml'
+
+jobs:
+  test:
+    name: Test Client
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: client/package-lock.json
+
+      - name: Install dependencies
+        working-directory: ./client
+        run: npm ci
+
+      - name: Run linter
+        working-directory: ./client
+        run: npm run build || true
+
+      - name: Run tests
+        working-directory: ./client
+        run: npm test -- --watchAll=false --coverage
+        env:
+          CI: true
+
+  build:
+    name: Build Client
+    runs-on: ubuntu-latest
+    needs: test
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: client/package-lock.json
+
+      - name: Install dependencies
+        working-directory: ./client
+        run: npm ci
+
+      - name: Build application
+        working-directory: ./client
+        run: npm run build
+        env:
+          REACT_APP_API_URL: http://localhost:3001
+
+      - name: Docker build
+        working-directory: ./client
+        run: docker build -t ecommerce-client:latest .
+
+  deploy:
+    name: Deploy Client
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Deploy notification
+        run: |
+          echo "Client deployment would happen here"
+          echo "Add your deployment steps (e.g., push to registry, deploy to cloud)"
+

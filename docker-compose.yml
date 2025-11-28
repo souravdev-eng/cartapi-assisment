@@ -1,0 +1,79 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:7.0
+    container_name: ecommerce-mongodb
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_DATABASE: ecommerce
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - ecommerce-network
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      args:
+        NODE_ENV: ${NODE_ENV:-development}
+    container_name: ecommerce-backend
+    restart: unless-stopped
+    ports:
+      - "3001:3001"
+    environment:
+      PORT: 3001
+      MONGODB_URI: mongodb://mongodb:27017/ecommerce
+      NTH_ORDER: ${NTH_ORDER:-5}
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    networks:
+      - ecommerce-network
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    command: ${BACKEND_CMD:-npm run dev}
+    profiles:
+      - dev
+      - prod
+
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+      target: ${CLIENT_TARGET:-development}
+    container_name: ecommerce-client
+    restart: unless-stopped
+    ports:
+      - "${CLIENT_PORT:-3000}:${CLIENT_EXPOSE_PORT:-3000}"
+    environment:
+      REACT_APP_API_URL: http://localhost:3001
+      CHOKIDAR_USEPOLLING: "true"
+    depends_on:
+      - backend
+    networks:
+      - ecommerce-network
+    volumes:
+      - ./client:/app
+      - /app/node_modules
+    profiles:
+      - dev
+      - prod
+
+volumes:
+  mongodb_data:
+    driver: local
+
+networks:
+  ecommerce-network:
+    driver: bridge
+
